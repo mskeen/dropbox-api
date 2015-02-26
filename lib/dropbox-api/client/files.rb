@@ -9,7 +9,9 @@ module Dropbox
           root     = options.delete(:root) || Dropbox::API::Config.mode
           path     = Dropbox::API::Util.escape(path)
           url      = ['', "files", root, path].compact.join('/')
-          connection.get_raw(:content, url)
+          headers  = range_header(options[:range])
+
+          connection.get_raw(:content, url, {}, headers)
         end
 
         def upload(path, data, options = {})
@@ -68,6 +70,12 @@ module Dropbox
           }.merge(options))
         end
 
+        private
+
+        def range_header(range)
+          return {} unless range
+          { "Range" => "bytes=#{range.first}-#{range.last}" }
+        end
       end
 
     end

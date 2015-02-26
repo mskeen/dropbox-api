@@ -225,10 +225,16 @@ client.chunked_upload 'file.txt', File.open('file.txt') # => #<Dropbox::API::Fil
 
 ### Dropbox::API::Client#download
 
-Downloads a file with a provided name and returns it's content
+Downloads a file with a provided name and returns its content
 
 ```ruby
 client.download 'file.txt' # => 'file body'
+```
+
+Can also be used to download part of a file
+
+```ruby
+client.download 'file.txt', range: 5..8 # => 'body'
 ```
 
 ### Dropbox::API::Client#search
