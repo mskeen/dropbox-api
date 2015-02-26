@@ -203,11 +203,31 @@ describe Dropbox::API::Client do
       }.should raise_error(Dropbox::API::Error::NotFound)
     end
 
-    it "downloads a part of a file from Dropbox" do
-      @client.upload "#{Dropbox::Spec.test_dir}/test_partial.txt", "Some file 1234567890"
-      file = @client.download "#{Dropbox::Spec.test_dir}/test_partial.txt", range: 10..13
-      file.should == "1234"
+    describe "partial downloads" do
+      before do
+        @client.upload "#{Dropbox::Spec.test_dir}/test_partial.txt",
+                       "start|middle|end"
+      end
+
+      it "downloads a section from the start of a Dropbox file" do
+        file = @client.download "#{Dropbox::Spec.test_dir}/test_partial.txt",
+                                range: 0..4
+        file.should == "start"
+      end
+
+      it "downloads a section from the middle of a Dropbox file" do
+        file = @client.download "#{Dropbox::Spec.test_dir}/test_partial.txt",
+                                range: 6..11
+        file.should == "middle"
+      end
+
+      it "downloads a section from the end of a Dropbox file" do
+        file = @client.download "#{Dropbox::Spec.test_dir}/test_partial.txt",
+                                range: 13..999
+        file.should == "end"
+      end
     end
+
   end
 
   describe "#delta" do
