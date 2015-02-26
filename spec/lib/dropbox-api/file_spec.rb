@@ -121,6 +121,10 @@ describe Dropbox::API::File do
       @file.download.should == 'spec file'
     end
 
+    it "should download part of the file" do
+      @file.download(range: 5..8).should == 'file'
+    end
+
   end
 
 end

@@ -18,14 +18,14 @@ module Dropbox
       def thumbnail(options = {})
         client.raw.thumbnails({ :path => self.path }.merge(options))
       end
-      
+
       def copy_ref(options = {})
         response = client.raw.copy_ref({ :path => self.path }.merge(options))
         Dropbox::API::Object.init(response, client)
       end
-      
-      def download
-        client.download(self.path)
+
+      def download(options = {})
+        client.download(self.path, options)
       end
 
       def direct_url(options = {})
